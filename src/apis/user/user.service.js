@@ -4,6 +4,7 @@ const Model = require("../../models");
 exports.createUser = async (req, res) => {
     try {
         const { body } = req;
+        console.log({body})
         const isExist = await Model.User.findOne({ email: body.email });
         if (isExist) {
             return resp400(`Email Id ${body.email} is already exist`);
@@ -15,13 +16,3 @@ exports.createUser = async (req, res) => {
         return resp500(err.message);
     }
 }
-// PR => Pull Request
-// 20,000 lines=> existing
-
-// getUserDataByUserId => {
-
-// 300
-
-// }
-
-// sonar quebe

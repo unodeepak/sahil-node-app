@@ -5,7 +5,7 @@ const Model = {};
 Model.User = User;
 Model.Order = Order;
 
-export default Model;
+module.exports = Model;
 
 
 

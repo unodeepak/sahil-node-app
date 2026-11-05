@@ -1,12 +1,13 @@
 
 const mongoose = require("mongoose");
 
-export default connetDB = async () => {
+exports.connetDB = async () => {
     try {
-        await mongoose.connect('', () => {
-            
-        })
+        await mongoose.connect('mongodb://localhost:27017/sahil-node-app');
+        console.log('=======> Database connected <===========');
     } catch (err) {
         console.log('Getting error in mongodb', err);
     }
 }
+
+// x;
