@@ -15,3 +15,13 @@ exports.createUser = async (req, res) => {
         return resp500(err.message);
     }
 }
+// PR => Pull Request
+// 20,000 lines=> existing
+
+// getUserDataByUserId => {
+
+// 300
+
+// }
+
+// sonar quebe
