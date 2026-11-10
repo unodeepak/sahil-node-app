@@ -1,9 +1,10 @@
 
 const mongoose = require("mongoose");
+const ENV = require("../config/env");
 
 exports.connetDB = async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/sahil-node-app');
+        await mongoose.connect(ENV.MONGO_URI);
         console.log('=======> Database connected <===========');
     } catch (err) {
         console.log('Getting error in mongodb', err);

@@ -1,13 +1,19 @@
 const { resp200, resp500, resp409, resp400 } = require("../../constant/resp");
 const Model = require("../../models");
 const mongoose = require("mongoose");
+const { getRedisData, createRedisData } = require('../../config/redis/redis');
 
 exports.createOrder = async (req, res) => {
     try {
         const { body } = req;
         console.log({ body })
         const data = await Model.Order.create(body);
-        return resp200('User created successfully', data);
+        const transactionBody = {
+            amount: body.amount,
+            isSuccess: true
+        }
+        const transaction = await Model.Transaction.create(transactionBody);
+        return resp200('User created successfully', { data, transaction });
     } catch (err) {
         console.log('Getting Error in : ', err);
         return resp500(err.message);
@@ -43,14 +49,17 @@ exports.getTotalAmount = async (req, res) => {
 exports.getTotalAmountByUserId = async (req, res) => {
     try {
         const { userId } = req.params;
-        console.log('userId: ', userId);
-
+        const key = 'getTotalAmountByUserId';
+        const redisData = await getRedisData(key);
+        if (redisData) {
+            return resp200('User data successfully', redisData);
+        }
         const data = await Model.Order.aggregate([
-            {
-                $match: {
-                    userId: new mongoose.Types.ObjectId(userId)
-                }
-            },
+            // {
+            //     $match: {
+            //         userId: new mongoose.Types.ObjectId(userId)
+            //     }
+            // },
             {
                 $group: {
                     _id: "$userId",
@@ -78,8 +87,9 @@ exports.getTotalAmountByUserId = async (req, res) => {
                 }
             }
         ]);
+        createRedisData(key, data);
 
-        return resp200('User created successfully', data);
+        return resp200('User data successfully', data);
     } catch (err) {
         console.log('Getting Error in : ', err);
         return resp500(err.message);
